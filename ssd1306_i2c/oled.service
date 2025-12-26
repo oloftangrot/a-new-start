@@ -1,0 +1,12 @@
+[Unit]
+Description=OLED Service
+After=multi-user.target
+
+[Service]
+Type=idle
+ExecStart=/home/olof/ssd1306_i2c/hostname
+
+[Install]
+WantedBy=multi-user.target
+
+# Copy to /etc/systemd/system
