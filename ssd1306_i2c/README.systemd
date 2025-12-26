@@ -1,0 +1,100 @@
+Use systemd to Start a Linux Service at Boot
+
+What is systemd?
+
+systemd is a Linux system tool initially developed by the Red Hat Linux team. It includes many features, including a bootstrapping system used to start and manage system processes. It is currently the default initialization system on most Linux distributions. Many commonly used software tools, such as SSH and Apache, ship with a systemd service.
+
+It is simple to create a custom systemd service that will run any script or process you choose. Although there are several ways to run a script or start a process when your Linode boots, a custom systemd service makes it easy to start, stop, or restart your script, as well as configure it to start automatically on boot. systemd offers the advantage of using a standardized interface that is consistent across all Linux distributions that support it.
+Create a Custom systemd Service
+
+    Create a script or executable that the service will manage. This guide uses a simple Bash script as an example:
+
+    File: test_service.sh
+
+        DATE=`date '+%Y-%m-%d %H:%M:%S'`
+        echo "Example service started at ${DATE}" | systemd-cat -p info
+
+        while :
+        do
+        echo "Looping...";
+        sleep 30;
+        done
+
+    This script will log the time at which it is initialized, then loop infinitely to keep the service running.
+
+    Copy the script to /usr/bin and make it executable:
+
+    sudo cp test_service.sh /usr/bin/test_service.sh
+    sudo chmod +x /usr/bin/test_service.sh
+
+    Create a Unit file to define a systemd service in your application, where /opt/myapp/ is the path to your application directory.
+
+    File: /opt/myapp/myservice.service
+
+        [Unit]
+        Description=Example systemd service.
+
+        [Service]
+        Type=simple
+        ExecStart=/bin/bash /usr/bin/test_service.sh
+
+        [Install]
+        WantedBy=multi-user.target
+
+        This defines a simple service that runs /usr/bin/test_service.sh through Bash.
+        The ExecStart directive specifies the command to run.
+        The [Install] section allows the service to be enabled at boot.
+
+    Link the unit file from your application directory. This approach can streamline deployments by keeping the service definition with your codebase:
+
+    sudo systemctl enable /opt/myapp/myservice.service
+
+    If the [Install] section is present, this creates the necessary symlinks in /etc/systemd/system/.
+
+    Alternatively, copy the unit file to /etc/systemd/system/, and adjust the permissions:
+
+    sudo cp myservice.service /etc/systemd/system/myservice.service
+    sudo chmod 644 /etc/systemd/system/myservice.service
+
+    For more information about the unit file and its available configuration options, see the systemd documentation.
+
+Start and Enable the Service
+
+    Once you have a unit file, you are ready to test the service:
+
+    sudo systemctl start myservice
+
+Check the status of the service:
+
+sudo systemctl status myservice
+
+    or more information about using systemctl commands, see the systemctl guide.
+
+Troubleshooting
+
+If the Example service started at ... line does not appear in the output of the status command, the systemd-cat output may not be reliable because of a race condition. As a workaround, you can update the test_service.sh file as follows:
+
+File: test_service.sh
+
+    info=/tmp/myservice-systemd-cat-pipe-info
+    mkfifo "$info"
+    trap "exec 3>&-; rm $info" EXIT
+    systemd-cat -p info < "$info" &
+    exec 3>"$info"
+
+    DATE=`date '+%Y-%m-%d %H:%M:%S'`
+    echo "Example service started at ${DATE}" > "$info"
+
+    while :
+    do
+    echo "Looping...";
+    sleep 30;
+    done
+
+More Information
+
+You may wish to consult the following resources for additional information on this topic. While these are provided in the hope that they will be useful, please note that we cannot vouch for the accuracy or timeliness of externally hosted materials.
+
+    systemd – Wikipedia
+    systemd man page
+    systemd Documentation
