@@ -51,7 +51,7 @@ int main( void ) {
   ssd1306_begin(SSD1306_SWITCHCAPVCC, SSD1306_I2C_ADDRESS);
 
   ssd1306_display(); //Adafruit logo is visible
-
+  sleep( 5 );
 //  char* text = "This is demo for SSD1306 i2c driver for Raspberry Pi";
 //  ssd1306_drawString(text);
   ssd1306_startscrollleft(00,0x0F);
