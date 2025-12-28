@@ -113,6 +113,6 @@ static uint32_t getMyIp( char * myIp, size_t len )
   else {
     snprintf( myIp, len, "%s", inet_ntoa(((struct sockaddr_in *)&ifr.ifr_addr)->sin_addr));
   }
-  printf("%s %ux\n", myIp, inAdr);
+//  printf("%s %ux\n", myIp, inAdr);
   return inAdr;
 }
