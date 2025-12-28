@@ -27,7 +27,7 @@ void sigInt( int signum )
   ssd1306_clearDisplay();
   ssd1306_drawString( "SIGINT!" );
   ssd1306_display();
-  ssd1306_startscrollleft(00,0x0F);
+  ssd1306_startscrollright(00,0x0F);
 //  printf( "Caught!\n" );
   exit( 0 );
 }
@@ -37,7 +37,7 @@ void sigTerm( int signum )
   ssd1306_clearDisplay();
   ssd1306_drawString( "SIGTERM!" );
   ssd1306_display();
-  ssd1306_startscrollleft(00,0x0F);
+  ssd1306_startscrollright(00,0x0F);
 //  printf( "Caught!\n" );
   exit( 0 );
 }
@@ -54,7 +54,7 @@ int main( void ) {
   sleep( 5 );
 //  char* text = "This is demo for SSD1306 i2c driver for Raspberry Pi";
 //  ssd1306_drawString(text);
-  ssd1306_startscrollleft(00,0x0F);
+  ssd1306_startscrollright(00,0x0F);
   for (;;) {
     inAdr = getMyIp( s, 64 );
     if ( oldAdr != inAdr ) {
@@ -66,7 +66,7 @@ int main( void ) {
     sleep( 5 );
   }
   ssd1306_dim(1);
-  ssd1306_startscrollleft(00,0x0F);
+  ssd1306_startscrollrightt(00,0x0F);
   sleep(5);
 
   ssd1306_clearDisplay();
