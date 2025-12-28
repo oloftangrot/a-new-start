@@ -66,7 +66,7 @@ int main( void ) {
     sleep( 5 );
   }
   ssd1306_dim(1);
-  ssd1306_startscrollrightt(00,0x0F);
+  ssd1306_startscrollright(00,0x0F);
   sleep(5);
 
   ssd1306_clearDisplay();
