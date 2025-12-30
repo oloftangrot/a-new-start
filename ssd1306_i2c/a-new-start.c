@@ -61,7 +61,7 @@ int main( void ) {
       ssd1306_clearDisplay();
       ssd1306_drawString( s );
       ssd1306_display();
-      ssd1306_startscrollright(00,0x0F);
+      ssd1306_startscrollleft(00,0x0F);
       oldAdr = inAdr;
     }
     sleep( 5 );

@@ -228,6 +228,8 @@ void ssd1306_begin(unsigned int vccstate, unsigned int i2caddr)
 	_vccstate = vccstate;
 
 	i2cd = wiringPiI2CSetup(i2caddr);
+//	i2cd = wiringPiI2CSetupInterface( "/dev/i2c-3", i2caddr); // Use sudo i2cdetect -y <n> to scan the bus <n>.
+
 	if (i2cd < 0) {
 		fprintf(stderr, "ssd1306_i2c : Unable to initialise I2C:\n");
 		return;
