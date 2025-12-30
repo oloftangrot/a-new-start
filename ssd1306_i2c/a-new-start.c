@@ -15,29 +15,29 @@ Demo for ssd1306 i2c driver for  Raspberry Pi
 #include <net/if.h>
 #include <arpa/inet.h>
 
-
 #include "ssd1306_i2c.h"
 
 static uint32_t getMyIp( char * myIp, size_t len );
 static void initSignalHandlers( void );
 
-
 void sigInt( int signum )
 {
+  ssd1306_stopscroll();
   ssd1306_clearDisplay();
   ssd1306_drawString( "SIGINT!" );
   ssd1306_display();
-  ssd1306_startscrollright(00,0x0F);
+  ssd1306_startscrollleft(00,0x0F);
 //  printf( "Caught!\n" );
   exit( 0 );
 }
 
 void sigTerm( int signum )
 {
+  ssd1306_stopscroll();
   ssd1306_clearDisplay();
   ssd1306_drawString( "SIGTERM!" );
   ssd1306_display();
-  ssd1306_startscrollright(00,0x0F);
+  ssd1306_startscrollleft(00,0x0F);
 //  printf( "Caught!\n" );
   exit( 0 );
 }
@@ -54,13 +54,14 @@ int main( void ) {
   sleep( 5 );
 //  char* text = "This is demo for SSD1306 i2c driver for Raspberry Pi";
 //  ssd1306_drawString(text);
-  ssd1306_startscrollright(00,0x0F);
   for (;;) {
     inAdr = getMyIp( s, 64 );
     if ( oldAdr != inAdr ) {
+      ssd1306_stopscroll();
       ssd1306_clearDisplay();
       ssd1306_drawString( s );
       ssd1306_display();
+      ssd1306_startscrollright(00,0x0F);
       oldAdr = inAdr;
     }
     sleep( 5 );
