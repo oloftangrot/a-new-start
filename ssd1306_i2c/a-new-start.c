@@ -67,7 +67,8 @@ int main( void ) {
       ssd1306_drawString( wifiIf );
       ssd1306_display();
       ssd1306_startscrollleft(00,0x0F);
-      oldAdr = inAdr;
+      oldLanAdr = inLanAdr;
+      oldWifiAdr = inWifiAdr;
     }
     sleep( 5 );
   }
