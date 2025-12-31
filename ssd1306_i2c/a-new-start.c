@@ -58,7 +58,7 @@ int main( void ) {
   for (;;) {
     inLanAdr = getMyIp( "eth0", lanIf, 64 );
     inWiFiAdr = getMyIp( "wlan0", wifiIf, 64 );
-    if ( ( oldLanAdr != inLanAdr ) || (  oldWifiAdr != inWifiAdr ) {
+    if ( ( oldLanAdr != inLanAdr ) || (  oldWifiAdr != inWifiAdr ) ) {
       ssd1306_stopscroll();
       ssd1306_clearDisplay();
       ssd1306_drawString( "eth0: " );
