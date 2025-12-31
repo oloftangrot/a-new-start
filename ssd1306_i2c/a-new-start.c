@@ -43,9 +43,10 @@ void sigTerm( int signum )
 }
 
 int main( void ) {
-  char s[64];
-  uint32_t oldAdr = UINT32_MAX;
-  uint32_t inAdr;
+  char lanIf[64], wifiIf[64];
+  uint32_t oldLanAdr = UINT32_MAX;
+  uint32_t oldWifiAdr = UINT32_MAX;
+  uint32_t inLanAdr, inWifiAdr;
 
   initSignalHandlers();
   ssd1306_begin(SSD1306_SWITCHCAPVCC, SSD1306_I2C_ADDRESS);
@@ -55,12 +56,15 @@ int main( void ) {
 //  char* text = "This is demo for SSD1306 i2c driver for Raspberry Pi";
 //  ssd1306_drawString(text);
   for (;;) {
-    inAdr = getMyIp( "eth0", s, 64 );
-    if ( oldAdr != inAdr ) {
+    inLanAdr = getMyIp( "eth0", lanIf, 64 );
+    inWiFiAdr = getMyIp( "wlan0", wifiIf, 64 );
+    if ( ( oldLanAdr != inLanAdr ) || (  oldWifiAdr != inWifiAdr ) {
       ssd1306_stopscroll();
       ssd1306_clearDisplay();
       ssd1306_drawString( "eth0: " );
-      ssd1306_drawString( s );
+      ssd1306_drawString( lanIf );
+      ssd1306_drawString( "wlan0: " );
+      ssd1306_drawString( wifiIf );
       ssd1306_display();
       ssd1306_startscrollleft(00,0x0F);
       oldAdr = inAdr;
