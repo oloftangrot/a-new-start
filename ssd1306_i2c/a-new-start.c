@@ -61,9 +61,9 @@ int main( void ) {
     if ( ( oldLanAdr != inLanAdr ) || (  oldWifiAdr != inWifiAdr ) ) {
       ssd1306_stopscroll();
       ssd1306_clearDisplay();
-      ssd1306_drawString( "eth0: " );
+      ssd1306_drawString( "lan:  " );
       ssd1306_drawString( lanIf );
-      ssd1306_drawString( "wlan0: " );
+      ssd1306_drawString( "wifi: " );
       ssd1306_drawString( wifiIf );
       ssd1306_display();
       ssd1306_startscrollleft(00,0x0F);
