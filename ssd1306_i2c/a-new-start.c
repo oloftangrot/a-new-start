@@ -17,7 +17,7 @@ Demo for ssd1306 i2c driver for  Raspberry Pi
 
 #include "ssd1306_i2c.h"
 
-static uint32_t getMyIp( char * myIp, size_t len );
+static uint32_t getMyIp( char const * const interface, char * myIp, size_t len );
 static void initSignalHandlers( void );
 
 void sigInt( int signum )
@@ -55,10 +55,11 @@ int main( void ) {
 //  char* text = "This is demo for SSD1306 i2c driver for Raspberry Pi";
 //  ssd1306_drawString(text);
   for (;;) {
-    inAdr = getMyIp( s, 64 );
+    inAdr = getMyIp( "eth0", s, 64 );
     if ( oldAdr != inAdr ) {
       ssd1306_stopscroll();
       ssd1306_clearDisplay();
+      ssd1306_drawString( "eth0: " );
       ssd1306_drawString( s );
       ssd1306_display();
       ssd1306_startscrollleft(00,0x0F);
@@ -88,7 +89,7 @@ static void initSignalHandlers( void ) {
   sigaction( SIGTERM, &action, NULL );
 }
 
-static uint32_t getMyIp( char * myIp, size_t len )
+static uint32_t getMyIp( char const * const interface, char * myIp, size_t len )
 {
   int fd;
   struct ifreq ifr;
@@ -101,18 +102,18 @@ static uint32_t getMyIp( char * myIp, size_t len )
   /* I want to get an IPv4 IP address */
   ifr.ifr_addr.sa_family = AF_INET;
 
-  /* I want IP address attached to "eth0" */
-  strncpy(ifr.ifr_name, "eth0", IFNAMSIZ-1);
+  /* I want IP address attached to the named interface string. */
+  strncpy(ifr.ifr_name, interface, IFNAMSIZ-1);
 
   ioctl(fd, SIOCGIFADDR, &ifr);
 
   close(fd);
   inAdr = ((struct sockaddr_in *)&ifr.ifr_addr)->sin_addr.s_addr;
   if ( 0 ==  inAdr ) {
-    snprintf( myIp, len, "localhost" );
+    snprintf( myIp, len, "not connected!\n" );
   }
   else {
-    snprintf( myIp, len, "%s", inet_ntoa(((struct sockaddr_in *)&ifr.ifr_addr)->sin_addr));
+    snprintf( myIp, len, "%s\n", inet_ntoa(((struct sockaddr_in *)&ifr.ifr_addr)->sin_addr));
   }
 //  printf("%s %ux\n", myIp, inAdr);
   return inAdr;
